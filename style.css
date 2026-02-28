@@ -544,6 +544,89 @@ input[type=number] { -moz-appearance: textfield; }
   to   { opacity: 1; transform: translateX(0); }
 }
 
+/* ── Theme toggle button ── */
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+.theme-toggle:hover { transform: scale(1.1); }
+
+/* ============================================================
+   LIGHT MODE  (.light-mode on <body>)
+   ============================================================ */
+
+body.light-mode {
+  background: linear-gradient(145deg, #f0f0f5 0%, #ffffff 50%, #e8e8f5 100%);
+  color: var(--rb-navy);
+}
+
+/* Watermark more visible on light background */
+body.light-mode .bg-watermark {
+  opacity: 0.06;
+  filter: invert(1); /* makes dark logo visible on white */
+}
+
+/* Header title: keep the gradient but shift to navy/red */
+body.light-mode .display-title {
+  background: linear-gradient(135deg, var(--rb-red) 0%, var(--rb-navy) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Player rows: white cards with a drop shadow */
+body.light-mode .player-row {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(27, 20, 100, 0.1);
+  border-left: 5px solid rgba(27, 20, 100, 0.3);
+  box-shadow: 0 2px 16px rgba(27, 20, 100, 0.08);
+}
+
+body.light-mode .player-row.rank-1 {
+  border-left-color: #FFD700;
+  background: rgba(255, 245, 200, 0.9);
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+}
+body.light-mode .player-row.rank-2 {
+  border-left-color: #A8A8A8;
+  background: rgba(230, 230, 230, 0.9);
+}
+body.light-mode .player-row.rank-3 {
+  border-left-color: #CD7F32;
+  background: rgba(240, 225, 210, 0.9);
+}
+
+/* Rank number and time: use navy on light, yellow on dark */
+body.light-mode .rank-number { color: var(--rb-navy); }
+body.light-mode .player-name  { color: var(--rb-navy); }
+body.light-mode .player-time  { color: var(--rb-red); }
+
+/* Status badge */
+body.light-mode .status-badge { color: rgba(27, 20, 100, 0.5); }
+
+/* Toggle button border on light bg */
+body.light-mode .theme-toggle {
+  border-color: rgba(27, 20, 100, 0.25);
+  background: rgba(27, 20, 100, 0.07);
+}
+
+/* Empty state */
+body.light-mode .empty-state { color: rgba(27, 20, 100, 0.4); }
+
 /* ── Responsive ── */
 @media (max-width: 560px) {
   .display-body { padding: 24px 14px 48px; }

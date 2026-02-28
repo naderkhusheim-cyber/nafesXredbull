@@ -82,3 +82,30 @@ function safeHtml(str) {
   el.textContent = String(str);
   return el.innerHTML;
 }
+
+// ── Dark / Light mode toggle ──────────────────────────────────
+const themeToggleBtn  = document.getElementById('theme-toggle');
+const themeIconEl     = document.getElementById('theme-icon');
+
+// Restore last choice
+if (localStorage.getItem('theme') === 'light') applyLight();
+
+themeToggleBtn.addEventListener('click', () => {
+  if (document.body.classList.contains('light-mode')) {
+    applyDark();
+  } else {
+    applyLight();
+  }
+});
+
+function applyLight() {
+  document.body.classList.add('light-mode');
+  themeIconEl.textContent = '🌙';       // show moon → click to go dark
+  localStorage.setItem('theme', 'light');
+}
+
+function applyDark() {
+  document.body.classList.remove('light-mode');
+  themeIconEl.textContent = '☀️';       // show sun → click to go light
+  localStorage.setItem('theme', 'dark');
+}
