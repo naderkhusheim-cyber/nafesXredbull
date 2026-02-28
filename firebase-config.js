@@ -16,7 +16,7 @@
 const firebaseConfig = {
   apiKey:            "AIzaSyBG8Je2HrST8pzA5oFao1k5h5-BQRSObgc",
   authDomain:        "redbull-competition.firebaseapp.com",
-  databaseURL:       "https://console.firebase.google.com/u/0/project/redbull-competition/firestore/databases/-default-/data",   // ← only this line needs updating
+  databaseURL:       "https://redbull-competition-default-rtdb.firebaseio.com/",   // ← only this line needs updating
   projectId:         "redbull-competition",
   storageBucket:     "redbull-competition.firebasestorage.app",
   messagingSenderId: "253641229434",
