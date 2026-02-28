@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Red Bull Competition — Leaderboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700;900&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="display-body">
+
+  <!-- Subtle background watermark (requires redbull-logo.png in project root) -->
+  <div class="bg-watermark"></div>
+
+  <div class="display-wrapper">
+
+    <!-- ── Header ── -->
+    <header class="display-header">
+      <img
+        src="redbull-logo.png"
+        alt="Red Bull"
+        class="header-logo"
+        onerror="this.style.display='none'"
+      />
+      <div class="header-text">
+        <h1 class="display-title">LEADERBOARD</h1>
+        <div class="header-divider"></div>
+      </div>
+    </header>
+
+    <!-- ── Leaderboard ── -->
+    <main class="leaderboard-container" id="leaderboard">
+      <div class="empty-state">
+        <span class="empty-icon">🏁</span>
+        <p>Waiting for players&hellip;</p>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ── Live status badge ── -->
+  <div class="status-badge">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">Connecting&hellip;</span>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="display.js"></script>
+</body>
+</html>
