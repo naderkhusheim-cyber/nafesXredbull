@@ -143,6 +143,37 @@ function safeHtml(str) {
   return el.innerHTML;
 }
 
+// ── Export to Excel ───────────────────────────────────────────
+
+function exportToExcel() {
+  const players = Object.values(playerMap);
+
+  if (players.length === 0) {
+    showToast('No players to export.', 'error');
+    return;
+  }
+
+  const sorted = getSorted(players, sortOrder);
+
+  // Build rows: header + data
+  const rows = [
+    ['Rank', 'Player Name', 'Time (Seconds)']
+  ];
+  sorted.forEach((p, i) => {
+    rows.push([i + 1, p.name, parseFloat(p.time)]);
+  });
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+
+  // Column widths
+  ws['!cols'] = [{ wch: 6 }, { wch: 28 }, { wch: 18 }];
+
+  XLSX.utils.book_append_sheet(wb, ws, 'Leaderboard');
+  XLSX.writeFile(wb, 'redbull-competition-results.xlsx');
+  showToast('Exported to Excel!', 'success');
+}
+
 function showToast(message, type = 'success') {
   const container = document.getElementById('toast-container');
   const toast     = document.createElement('div');
