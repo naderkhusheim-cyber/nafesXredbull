@@ -45,7 +45,8 @@ db.ref('settings/images').on('value', snap => {
     .map(img => {
       const src = safeUrl(img.url);
       if (!src) return '';
-      return `<div class="prize-card"><img src="${src}" alt="${safeHtml(img.label || '')}" loading="lazy" onerror="this.closest('.prize-card').remove()" /></div>`;
+      // onerror: dim image but KEEP the white card visible
+      return `<div class="prize-card"><img src="${src}" alt="${safeHtml(img.label || '')}" loading="lazy" onerror="this.style.opacity='0.35'" /></div>`;
     })
     .join('');
 
@@ -68,8 +69,10 @@ db.ref('settings/sortOrder').on('value', snap => {
 });
 
 // ── Render ───────────────────────────────────────────────────
+const DISPLAY_LIMIT = 20;
+
 function render() {
-  const sorted = getSorted(currentPlayers, currentSort);
+  const sorted = getSorted(currentPlayers, currentSort).slice(0, DISPLAY_LIMIT);
 
   if (sorted.length === 0) {
     leaderboardEl.innerHTML = `

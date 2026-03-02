@@ -35,6 +35,14 @@ const THEMES = [
     glow:   'rgba(228,170,10,0.45)',
   },
   {
+    id:     'redbull-booth-alive',
+    name:   'RB Booth\nAlive ✦',
+    emoji:  '⭐',
+    bg:     'linear-gradient(135deg, #0f1025 0%, #2f304c 50%, #3d3e62 100%)',
+    accent: '#e4aa0a',
+    glow:   'rgba(228,170,10,0.55)',
+  },
+  {
     id:     'ramadan-gold',
     name:   'Ramadan\nGold',
     emoji:  '🌙',

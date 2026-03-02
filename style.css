@@ -133,6 +133,98 @@ body[data-theme="redbull-booth"] {
   --th-sub-text:        rgba(228, 170, 10, 0.9);
 }
 
+/* ── THEME: Red Bull Booth — Alive ───────────────────────── */
+/* Same palette as redbull-booth but animated background +     */
+/* golden star field + warm light halos for Ramadan atmosphere */
+body[data-theme="redbull-booth-alive"] {
+  --th-text:            #ffffff;
+  --th-text-dim:        rgba(255, 255, 255, 0.45);
+  --th-glass:           rgba(255, 255, 255, 0.065);
+  --th-glass-border:    rgba(228, 170, 10, 0.28);
+  --th-accent1:         #e4aa0a;
+  --th-accent2:         #ffffff;
+  --th-title-grad:      linear-gradient(135deg, #e4aa0a 0%, #ffd740 100%);
+  --th-divider-grad:    linear-gradient(90deg, transparent, #e4aa0a, #ffffff, #e4aa0a, transparent);
+  --th-row-border-left: #e4aa0a;
+  --th-num-color:       #e4aa0a;
+  --th-dec-color:       #ffffff;
+  --th-glow:            rgba(228, 170, 10, 0.65);
+  --th-img-border:      rgba(228, 170, 10, 0.5);
+  --th-img-shadow:      rgba(228, 170, 10, 0.28);
+  --th-sub-text:        rgba(228, 170, 10, 0.9);
+
+  /* Moving gradient — dark navy ↔ booth purple ↔ deep indigo, cycling */
+  background: linear-gradient(
+    145deg,
+    #0f1025 0%,
+    #2f304c 28%,
+    #3d3e62 52%,
+    #2a2b50 76%,
+    #0f1025 100%
+  );
+  background-size: 300% 300%;
+  animation: boothBgShift 14s ease-in-out infinite;
+}
+
+@keyframes boothBgShift {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+/* ✦ Golden star field */
+body[data-theme="redbull-booth-alive"]::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 2px   2px   at  8%  10%, rgba(255,220,80,1.0)  0%, transparent 0%),
+    radial-gradient(ellipse 1px   1px   at 18%  55%, rgba(255,220,80,0.70) 0%, transparent 0%),
+    radial-gradient(ellipse 1.5px 1.5px at 28%  22%, rgba(255,220,80,0.90) 0%, transparent 0%),
+    radial-gradient(ellipse 1px   1px   at 38%  80%, rgba(255,220,80,0.60) 0%, transparent 0%),
+    radial-gradient(ellipse 2px   2px   at 50%   5%, rgba(255,220,80,0.95) 0%, transparent 0%),
+    radial-gradient(ellipse 1px   1px   at 60%  65%, rgba(255,220,80,0.55) 0%, transparent 0%),
+    radial-gradient(ellipse 1.5px 1.5px at 72%  18%, rgba(255,220,80,0.88) 0%, transparent 0%),
+    radial-gradient(ellipse 1px   1px   at 82%  82%, rgba(255,220,80,0.60) 0%, transparent 0%),
+    radial-gradient(ellipse 2px   2px   at 90%  40%, rgba(255,220,80,0.80) 0%, transparent 0%),
+    radial-gradient(ellipse 1px   1px   at 96%  70%, rgba(255,220,80,0.55) 0%, transparent 0%),
+    radial-gradient(ellipse 1px   1px   at 12%  88%, rgba(255,220,80,0.65) 0%, transparent 0%),
+    radial-gradient(ellipse 1.5px 1.5px at 33%  45%, rgba(255,220,80,0.75) 0%, transparent 0%),
+    radial-gradient(ellipse 1px   1px   at 55%  92%, rgba(255,220,80,0.50) 0%, transparent 0%),
+    radial-gradient(ellipse 1.5px 1.5px at 78%  30%, rgba(255,220,80,0.85) 0%, transparent 0%),
+    radial-gradient(ellipse 1px   1px   at 45%  60%, rgba(255,220,80,0.55) 0%, transparent 0%),
+    radial-gradient(ellipse 1px   1px   at 65%  48%, rgba(255,220,80,0.60) 0%, transparent 0%),
+    radial-gradient(ellipse 2px   2px   at 22%  35%, rgba(255,220,80,0.80) 0%, transparent 0%),
+    radial-gradient(ellipse 1px   1px   at 87%  14%, rgba(255,220,80,0.65) 0%, transparent 0%);
+  pointer-events: none;
+  z-index: 0;
+  animation: starTwinkle 4.5s ease-in-out infinite alternate;
+}
+
+/* ✦ Warm golden Ramadan light-halo glow — top corners + bottom glow */
+body[data-theme="redbull-booth-alive"]::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    /* top-left lantern */
+    radial-gradient(ellipse 55% 35% at  10%  0%, rgba(228,170,10,0.22) 0%, transparent 100%),
+    /* top-center lantern */
+    radial-gradient(ellipse 45% 28% at  50%  0%, rgba(228,170,10,0.16) 0%, transparent 100%),
+    /* top-right lantern */
+    radial-gradient(ellipse 50% 32% at  90%  0%, rgba(228,170,10,0.20) 0%, transparent 100%),
+    /* floor glow */
+    radial-gradient(ellipse 80% 20% at  50% 100%, rgba(228,170,10,0.10) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+  animation: lightPulse 3.8s ease-in-out infinite alternate;
+}
+
+@keyframes lightPulse {
+  from { opacity: 0.6; }
+  to   { opacity: 1;   }
+}
+
 /* ── THEME: Ramadan Lantern ───────────────────────────────── */
 body[data-theme="ramadan-lantern"] {
   --th-bg:              linear-gradient(160deg, #120600 0%, #2E1204 50%, #4A1E08 100%);
@@ -293,8 +385,9 @@ body[data-theme^="ramadan"] .ramadan-header-decor {
 .prize-card {
   background: #ffffff;
   border-radius: 22px;
-  width: clamp(110px, 14.5vw, 188px);
-  height: clamp(110px, 14.5vw, 188px);
+  /* clamp scales from 65px (tiny mobile) up to 188px (desktop) */
+  width:  clamp(65px, 14.5vw, 188px);
+  height: clamp(65px, 14.5vw, 188px);
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -1014,5 +1107,7 @@ input[type=number] { -moz-appearance: textfield; }
   .players-card-header { flex-direction: column; }
   .card-actions   { width: 100%; justify-content: space-between; }
   .theme-grid     { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
-  .gallery-strip  { gap: 10px; }
+  /* Prize cards: tighter overlap on small screens */
+  .prize-card     { margin: 0 -8px; border-radius: 14px; padding: 10px; }
+  .prize-cards    { padding: 10px 16px 24px; }
 }
