@@ -11,17 +11,21 @@
   />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="display-body">
+<body class="display-body" data-theme="dark">
 
   <div class="display-wrapper">
 
     <!-- ── Header ── -->
     <header class="display-header">
       <div class="title-block">
+        <div class="ramadan-header-decor">🌙 &nbsp; رمضان كريم &nbsp; 🌙</div>
         <h1 class="display-title">LEADERBOARD</h1>
         <div class="header-divider"></div>
       </div>
     </header>
+
+    <!-- ── Image Gallery Strip (admin-managed) ── -->
+    <div class="gallery-strip" id="gallery-strip"></div>
 
     <!-- ── Leaderboard ── -->
     <main class="leaderboard-container" id="leaderboard">
@@ -31,14 +35,6 @@
       </div>
     </main>
 
-  </div>
-
-  <!-- ── Mobile theme menu (phone only) ── -->
-  <div class="mobile-menu-wrap" id="mobile-menu-wrap">
-    <button class="mobile-menu-trigger" id="mobile-menu-trigger">⚙️</button>
-    <div class="mobile-menu-dropdown hidden" id="mobile-menu-dropdown">
-      <button id="theme-option">☀️ Light Mode</button>
-    </div>
   </div>
 
   <!-- Firebase -->

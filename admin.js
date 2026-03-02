@@ -1,6 +1,6 @@
 // ================================================================
 //  admin.js — Admin panel logic for admin.html
-//  Handles adding / deleting players and changing sort order.
+//  Handles players, sort order, display theme, and display images.
 //  All changes sync instantly to the display page via Firebase.
 // ================================================================
 
@@ -10,11 +10,57 @@ const timeInput   = document.getElementById('player-time');
 const playersList = document.getElementById('players-list');
 const playerCount = document.getElementById('player-count');
 
-// Local state — keyed by Firebase push ID for safe deletion
-let playerMap  = {};   // { id: { id, name, time } }
-let sortOrder  = 'time-asc';
+// Local state
+let playerMap   = {};   // { id: { id, name, time } }
+let sortOrder   = 'time-asc';
+let imageMap    = {};   // { id: { id, url, label, order } }
+let currentTheme = 'dark';
 
-// ── Firebase listeners ───────────────────────────────────────
+// ── Theme definitions ─────────────────────────────────────────
+const THEMES = [
+  {
+    id:     'dark',
+    name:   'Red Bull\nDark',
+    emoji:  '🔵',
+    bg:     'linear-gradient(135deg, #100D3E 0%, #1B1464 100%)',
+    accent: '#FFC906',
+    glow:   'rgba(255,201,6,0.35)',
+  },
+  {
+    id:     'ramadan-gold',
+    name:   'Ramadan\nGold',
+    emoji:  '🌙',
+    bg:     'linear-gradient(135deg, #05030D 0%, #1B1440 100%)',
+    accent: '#D4AF37',
+    glow:   'rgba(212,175,55,0.45)',
+  },
+  {
+    id:     'ramadan-green',
+    name:   'Ramadan\nGreen',
+    emoji:  '☪️',
+    bg:     'linear-gradient(135deg, #030D07 0%, #0D3D22 100%)',
+    accent: '#C9A84C',
+    glow:   'rgba(201,168,76,0.45)',
+  },
+  {
+    id:     'ramadan-purple',
+    name:   'Ramadan\nPurple',
+    emoji:  '✨',
+    bg:     'linear-gradient(135deg, #060110 0%, #1C1048 100%)',
+    accent: '#C8A84B',
+    glow:   'rgba(200,168,75,0.45)',
+  },
+  {
+    id:     'ramadan-lantern',
+    name:   'Ramadan\nLantern',
+    emoji:  '🏮',
+    bg:     'linear-gradient(135deg, #120600 0%, #4A1E08 100%)',
+    accent: '#E6A817',
+    glow:   'rgba(230,168,23,0.45)',
+  },
+];
+
+// ── Firebase listeners ────────────────────────────────────────
 
 db.ref('players').on('value', snap => {
   playerMap = {};
@@ -32,7 +78,20 @@ db.ref('settings/sortOrder').on('value', snap => {
   renderList();
 });
 
-// ── Add player ───────────────────────────────────────────────
+db.ref('settings/theme').on('value', snap => {
+  currentTheme = snap.val() || 'dark';
+  renderThemeGrid();
+});
+
+db.ref('settings/images').on('value', snap => {
+  imageMap = {};
+  snap.forEach(child => {
+    imageMap[child.key] = { id: child.key, ...child.val() };
+  });
+  renderImages();
+});
+
+// ── Add player ────────────────────────────────────────────────
 
 form.addEventListener('submit', e => {
   e.preventDefault();
@@ -40,7 +99,7 @@ form.addEventListener('submit', e => {
   const name    = nameInput.value.trim();
   const timeVal = parseFloat(timeInput.value);
 
-  if (!name)                        return showToast('Enter a player name.', 'error');
+  if (!name)                         return showToast('Enter a player name.', 'error');
   if (isNaN(timeVal) || timeVal < 0) return showToast('Enter a valid time (≥ 0).', 'error');
 
   db.ref('players')
@@ -105,7 +164,6 @@ function renderList() {
     .map((p, i) => buildAdminRow(p, i + 1))
     .join('');
 
-  // Event delegation — one listener instead of inline onclick
   playersList.onclick = e => {
     const btn = e.target.closest('[data-action]');
     if (!btn) return;
@@ -128,7 +186,97 @@ function buildAdminRow(player, rank) {
     </div>`;
 }
 
-// ── Helpers ──────────────────────────────────────────────────
+// ── Theme management ──────────────────────────────────────────
+
+function setTheme(themeId) {
+  db.ref('settings/theme')
+    .set(themeId)
+    .then(() => showToast('Theme updated!', 'success'))
+    .catch(() => showToast('Error updating theme.', 'error'));
+}
+
+function renderThemeGrid() {
+  const grid = document.getElementById('theme-grid');
+  const nameEl = document.getElementById('theme-active-name');
+
+  const active = THEMES.find(t => t.id === currentTheme) || THEMES[0];
+  if (nameEl) nameEl.textContent = active.name.replace('\n', ' ');
+
+  grid.innerHTML = THEMES.map(t => `
+    <button
+      class="theme-btn ${currentTheme === t.id ? 'active' : ''}"
+      onclick="setTheme('${t.id}')"
+      style="--t-bg:${t.bg};--t-accent:${t.accent};--t-glow:${t.glow}"
+    >
+      <span class="theme-btn-emoji">${t.emoji}</span>
+      <span class="theme-btn-name">${t.name.replace('\n', '<br>')}</span>
+    </button>
+  `).join('');
+}
+
+// ── Image management ──────────────────────────────────────────
+
+function addImage() {
+  const urlInput   = document.getElementById('image-url');
+  const labelInput = document.getElementById('image-label');
+  const url        = urlInput.value.trim();
+  const label      = labelInput.value.trim();
+
+  if (!url) return showToast('Enter an image URL.', 'error');
+
+  try { new URL(url); } catch {
+    return showToast('Enter a valid URL (https://...).', 'error');
+  }
+
+  db.ref('settings/images')
+    .push({ url, label, order: Date.now() })
+    .then(() => {
+      urlInput.value   = '';
+      labelInput.value = '';
+      showToast('Image added!', 'success');
+    })
+    .catch(() => showToast('Error adding image.', 'error'));
+}
+
+function removeImage(id) {
+  if (!confirm('Remove this image from the display?')) return;
+
+  db.ref(`settings/images/${id}`)
+    .remove()
+    .then(() => showToast('Image removed.', 'success'))
+    .catch(() => showToast('Error removing image.', 'error'));
+}
+
+function renderImages() {
+  const listEl = document.getElementById('images-list');
+  const images = Object.values(imageMap);
+
+  if (images.length === 0) {
+    listEl.innerHTML = '<div class="admin-empty">No images yet. Add image URLs above!</div>';
+    return;
+  }
+
+  images.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+  listEl.innerHTML = images.map(img => `
+    <div class="admin-image-item">
+      <img
+        class="admin-image-thumb"
+        src="${safeHtml(img.url)}"
+        alt=""
+        onerror="this.style.opacity='0.25'"
+      />
+      <span class="admin-image-label">${safeHtml(img.label || img.url)}</span>
+      <button
+        class="btn btn-icon-delete"
+        onclick="removeImage('${img.id}')"
+        title="Remove image"
+      >Remove</button>
+    </div>
+  `).join('');
+}
+
+// ── Helpers ───────────────────────────────────────────────────
 
 function getSorted(list, order) {
   const copy = [...list];
@@ -155,10 +303,7 @@ function exportToExcel() {
 
   const sorted = getSorted(players, sortOrder);
 
-  // Build rows: header + data
-  const rows = [
-    ['Rank', 'Player Name', 'Time (Seconds)']
-  ];
+  const rows = [['Rank', 'Player Name', 'Time (Seconds)']];
   sorted.forEach((p, i) => {
     rows.push([i + 1, p.name, parseFloat(p.time)]);
   });
@@ -166,7 +311,6 @@ function exportToExcel() {
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.aoa_to_sheet(rows);
 
-  // Column widths
   ws['!cols'] = [{ wch: 6 }, { wch: 28 }, { wch: 18 }];
 
   XLSX.utils.book_append_sheet(wb, ws, 'Leaderboard');

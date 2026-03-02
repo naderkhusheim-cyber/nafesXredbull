@@ -92,6 +92,38 @@
       </div>
     </section>
 
+    <!-- ── Display Theme Selector ── -->
+    <section class="card theme-card">
+      <h2 class="card-heading">DISPLAY THEME</h2>
+      <p class="theme-active-label">Active theme: <span id="theme-active-name">Red Bull Dark</span></p>
+      <div class="theme-grid" id="theme-grid">
+        <!-- Rendered by admin.js -->
+      </div>
+    </section>
+
+    <!-- ── Display Images ── -->
+    <section class="card images-card">
+      <h2 class="card-heading">DISPLAY IMAGES</h2>
+      <div class="image-form-row">
+        <input
+          type="url"
+          id="image-url"
+          class="img-url-input"
+          placeholder="https://example.com/photo.jpg"
+        />
+        <input
+          type="text"
+          id="image-label"
+          class="img-label-input"
+          placeholder="Caption (optional)"
+        />
+        <button class="btn btn-add-image" onclick="addImage()">+ ADD</button>
+      </div>
+      <div id="images-list">
+        <div class="admin-empty">No images yet. Add image URLs above!</div>
+      </div>
+    </section>
+
   </div>
 
   <!-- Toast notifications -->
