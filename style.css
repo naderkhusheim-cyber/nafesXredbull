@@ -348,7 +348,7 @@ body[data-theme^="ramadan"] .ramadan-header-decor {
   color: var(--th-text);
 }
 
-/* ── Time Display — Split Big Numbers ── */
+/* ── Time Display — M:SS:MS big split format ── */
 .player-time {
   flex-shrink: 0;
   white-space: nowrap;
@@ -364,37 +364,41 @@ body[data-theme^="ramadan"] .ramadan-header-decor {
   gap: 0;
 }
 
-.time-whole {
+/* Minutes and Seconds — large primary color */
+.time-m,
+.time-s {
   font-family: var(--font-display);
-  font-size: clamp(54px, 8vw, 116px);
+  font-size: clamp(50px, 7.5vw, 110px);
   color: var(--th-num-color);
-  letter-spacing: -3px;
-  text-shadow: 0 0 40px var(--th-glow), 0 0 80px var(--th-glow);
-  line-height: 0.88;
-}
-
-.time-dot {
-  font-family: var(--font-display);
-  font-size: clamp(38px, 5.5vw, 84px);
-  color: var(--th-text);
-  padding: 0 2px;
-  line-height: 0.88;
-  opacity: 0.7;
-}
-
-.time-dec {
-  font-family: var(--font-display);
-  font-size: clamp(38px, 5.5vw, 84px);
-  color: var(--th-dec-color);
   letter-spacing: -2px;
+  text-shadow: 0 0 40px var(--th-glow), 0 0 70px var(--th-glow);
+  line-height: 0.88;
+}
+
+/* Colon separator — dimmed */
+.time-sep {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5.5vw, 82px);
+  color: var(--th-text);
+  opacity: 0.45;
+  padding: 0 1px;
+  line-height: 0.88;
+}
+
+/* Milliseconds (centiseconds) — accent color 2, slightly smaller */
+.time-cs {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5.5vw, 82px);
+  color: var(--th-dec-color);
+  letter-spacing: -1px;
   line-height: 0.88;
   text-shadow: 0 0 30px var(--th-glow);
 }
 
 .time-unit {
-  font-size: clamp(9px, 1.1vw, 12px);
+  font-size: clamp(8px, 1vw, 11px);
   font-weight: 700;
-  letter-spacing: 4px;
+  letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--th-text-dim);
   text-align: right;
@@ -876,10 +880,10 @@ input[type=number] { -moz-appearance: textfield; }
 
 /* ── Responsive ── */
 @media (max-width: 640px) {
-  .time-whole { font-size: clamp(38px, 10vw, 72px); letter-spacing: -1px; }
-  .time-dot   { font-size: clamp(28px, 7.5vw, 54px); }
-  .time-dec   { font-size: clamp(28px, 7.5vw, 54px); letter-spacing: 0; }
-  .time-unit  { font-size: 10px; letter-spacing: 3px; }
+  .time-m, .time-s { font-size: clamp(32px, 9vw, 60px); letter-spacing: -1px; }
+  .time-sep         { font-size: clamp(24px, 7vw, 48px); }
+  .time-cs          { font-size: clamp(24px, 7vw, 48px); letter-spacing: 0; }
+  .time-unit        { font-size: 9px; letter-spacing: 2px; }
 }
 
 @media (max-width: 560px) {

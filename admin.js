@@ -97,10 +97,10 @@ form.addEventListener('submit', e => {
   e.preventDefault();
 
   const name    = nameInput.value.trim();
-  const timeVal = parseFloat(timeInput.value);
+  const timeVal = parseTime(timeInput.value);
 
-  if (!name)                         return showToast('Enter a player name.', 'error');
-  if (isNaN(timeVal) || timeVal < 0) return showToast('Enter a valid time (≥ 0).', 'error');
+  if (!name)          return showToast('Enter a player name.', 'error');
+  if (isNaN(timeVal)) return showToast('Invalid time — use M:SS:MS (e.g. 1:45:29 or 45:29).', 'error');
 
   db.ref('players')
     .push({ name, time: timeVal })
@@ -176,7 +176,7 @@ function buildAdminRow(player, rank) {
     <div class="admin-player-item">
       <span class="admin-rank">${rank}</span>
       <span class="admin-name">${safeHtml(player.name)}</span>
-      <span class="admin-time">${parseFloat(player.time).toFixed(2)}s</span>
+      <span class="admin-time">${formatTime(parseFloat(player.time))}</span>
       <button
         class="btn btn-icon-delete"
         data-action="delete"
@@ -278,6 +278,45 @@ function renderImages() {
 
 // ── Helpers ───────────────────────────────────────────────────
 
+/**
+ * Parse "M:SS:MS" or "SS:MS" into total seconds (float).
+ * e.g. "1:45:29" → 105.29   |   "45:29" → 45.29
+ */
+function parseTime(str) {
+  const parts = str.trim().split(':');
+  if (parts.length === 3) {
+    const m  = parseInt(parts[0], 10);
+    const s  = parseInt(parts[1], 10);
+    const cs = parseInt(parts[2], 10);
+    if ([m, s, cs].some(isNaN)) return NaN;
+    if (s >= 60 || cs >= 100)   return NaN;
+    return m * 60 + s + cs / 100;
+  }
+  if (parts.length === 2) {
+    const s  = parseInt(parts[0], 10);
+    const cs = parseInt(parts[1], 10);
+    if ([s, cs].some(isNaN)) return NaN;
+    if (cs >= 100)            return NaN;
+    return s + cs / 100;
+  }
+  return NaN;
+}
+
+/**
+ * Format total seconds into display string.
+ * e.g. 105.29 → "1:45:29"   |   45.29 → "45:29"
+ */
+function formatTime(totalSeconds) {
+  const totalCs = Math.round(totalSeconds * 100);
+  const cs      = totalCs % 100;
+  const totalS  = Math.floor(totalCs / 100);
+  const s       = totalS % 60;
+  const m       = Math.floor(totalS / 60);
+  const csStr   = cs.toString().padStart(2, '0');
+  const sStr    = s.toString().padStart(2, '0');
+  return m > 0 ? `${m}:${sStr}:${csStr}` : `${s}:${csStr}`;
+}
+
 function getSorted(list, order) {
   const copy = [...list];
   if (order === 'time-asc')  return copy.sort((a, b) => a.time - b.time);
@@ -303,9 +342,9 @@ function exportToExcel() {
 
   const sorted = getSorted(players, sortOrder);
 
-  const rows = [['Rank', 'Player Name', 'Time (Seconds)']];
+  const rows = [['Rank', 'Player Name', 'Time (M:SS:MS)']];
   sorted.forEach((p, i) => {
-    rows.push([i + 1, p.name, parseFloat(p.time)]);
+    rows.push([i + 1, p.name, formatTime(parseFloat(p.time))]);
   });
 
   const wb = XLSX.utils.book_new();

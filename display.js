@@ -79,24 +79,44 @@ function buildRow(player, index) {
   const rank      = index + 1;
   const medals    = { 1: '🥇', 2: '🥈', 3: '🥉' };
   const rankClass = rank <= 3 ? `rank-${rank}` : '';
-  const val       = parseFloat(player.time).toFixed(2);
-  const [whole, dec] = val.split('.');
+  const formatted = formatTime(parseFloat(player.time));
+  const parts     = formatted.split(':');
 
   const position = rank <= 3
     ? `<span class="pos-medal">${medals[rank]}</span>`
     : `<span class="pos-number">${rank}</span>`;
+
+  // 3-part: M:SS:MS  |  2-part: SS:MS
+  const timeHTML = parts.length === 3
+    ? `<span class="time-m">${parts[0]}</span><span class="time-sep">:</span><span class="time-s">${parts[1]}</span><span class="time-sep">:</span><span class="time-cs">${parts[2]}</span>`
+    : `<span class="time-s">${parts[0]}</span><span class="time-sep">:</span><span class="time-cs">${parts[1]}</span>`;
+
+  const unitLabel = parts.length === 3 ? 'MIN : SEC : MS' : 'SEC : MS';
 
   return `
     <div class="player-row ${rankClass}">
       ${position}
       <span class="player-name">${safeHtml(player.name)}</span>
       <div class="player-time">
-        <div class="time-display">
-          <span class="time-whole">${whole}</span><span class="time-dot">.</span><span class="time-dec">${dec}</span>
-        </div>
-        <div class="time-unit">Seconds</div>
+        <div class="time-display">${timeHTML}</div>
+        <div class="time-unit">${unitLabel}</div>
       </div>
     </div>`;
+}
+
+/**
+ * Format total seconds → "M:SS:MS" or "SS:MS"
+ * e.g. 105.29 → "1:45:29"  |  45.29 → "45:29"
+ */
+function formatTime(totalSeconds) {
+  const totalCs = Math.round(totalSeconds * 100);
+  const cs      = totalCs % 100;
+  const totalS  = Math.floor(totalCs / 100);
+  const s       = totalS % 60;
+  const m       = Math.floor(totalS / 60);
+  const csStr   = cs.toString().padStart(2, '0');
+  const sStr    = s.toString().padStart(2, '0');
+  return m > 0 ? `${m}:${sStr}:${csStr}` : `${s}:${csStr}`;
 }
 
 // ── Helpers ──────────────────────────────────────────────────
