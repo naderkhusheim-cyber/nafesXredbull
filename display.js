@@ -30,28 +30,44 @@ db.ref('settings/prizesTitle').on('value', snap => {
 
 // ── Firebase: Listen for images → floating prize cards ────────
 db.ref('settings/images').on('value', snap => {
-  const imgs = [];
-  snap.forEach(child => imgs.push({ id: child.key, ...child.val() }));
+  // Read the raw object — more reliable than snap.forEach in all Firebase versions
+  const raw = snap.val();
 
-  if (imgs.length === 0) {
+  // Clear any existing cards regardless
+  prizeCardsEl.innerHTML = '';
+
+  if (!raw || typeof raw !== 'object') {
     prizesSectionEl.style.display = 'none';
-    prizeCardsEl.innerHTML = '';
     return;
   }
 
-  imgs.sort((a, b) => (a.order || 0) - (b.order || 0));
+  // Build array from all keys, filter out any entries without a URL
+  const imgs = Object.keys(raw)
+    .map(key => ({ id: key, ...raw[key] }))
+    .filter(img => img.url)
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  // Show section FIRST so flex container has correct width for card layout
+  if (imgs.length === 0) {
+    prizesSectionEl.style.display = 'none';
+    return;
+  }
+
+  // Show section before appending cards
   prizesSectionEl.style.display = 'block';
 
-  // Use safeHtml on the URL directly — safeUrl's strict http/https check was
-  // silently dropping cards whose URLs use other valid protocols (blob:, etc.)
-  prizeCardsEl.innerHTML = imgs
-    .map(img => {
-      if (!img.url) return '';
-      return `<div class="prize-card"><img src="${safeHtml(String(img.url))}" alt="${safeHtml(img.label || '')}" onerror="this.style.opacity='0.35'" /></div>`;
-    })
-    .join('');
+  // Build each card via DOM API — avoids innerHTML encoding or parsing issues
+  imgs.forEach(img => {
+    const card  = document.createElement('div');
+    card.className = 'prize-card';
+
+    const image = document.createElement('img');
+    image.src   = img.url;          // direct property assignment, no encoding
+    image.alt   = img.label || '';
+    image.addEventListener('error', () => { image.style.opacity = '0.35'; });
+
+    card.appendChild(image);
+    prizeCardsEl.appendChild(card);
+  });
 });
 
 // ── Firebase: Listen for players ─────────────────────────────

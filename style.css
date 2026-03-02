@@ -398,35 +398,56 @@ body[data-theme^="ramadan"] .ramadan-header-decor {
 
 .prize-cards {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   justify-content: center;
   align-items: flex-end;
-  padding: 16px 48px 36px;
+  padding: 8px 32px 32px;
   overflow: visible;
 }
 
-/* White floating card */
+/* ── White floating prize card ── */
 .prize-card {
+  --rot: 0deg;                       /* per-card rotation set below */
   background: #ffffff;
-  border-radius: 22px;
-  /* clamp scales from 65px (tiny mobile) up to 188px (desktop) */
-  width:  clamp(65px, 14.5vw, 188px);
-  height: clamp(65px, 14.5vw, 188px);
+  border-radius: 20px;
   flex-shrink: 0;
+  width:  clamp(82px, 13vw, 170px);
+  height: clamp(82px, 13vw, 170px);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 14px;
+  padding: 12px;
   box-shadow:
-    0 14px 44px rgba(0, 0, 0, 0.42),
-    0 4px 14px rgba(0, 0, 0, 0.25),
-    0 1px 3px rgba(0, 0, 0, 0.15);
+    0 16px 48px rgba(0, 0, 0, 0.45),
+    0  4px 12px rgba(0, 0, 0, 0.22);
   position: relative;
-  transition: box-shadow 0.3s;
+  animation: cardFloat 3.2s ease-in-out infinite;
+  transition: box-shadow 0.25s;
 }
 
-/* Overlap cards — only from 2nd card onward to avoid centering issues */
-.prize-card + .prize-card {
-  margin-left: -24px;
+/* Overlap: pull every card except the first leftward */
+.prize-card:not(:first-child) { margin-left: -22px; }
+
+/* Per-card rotation + staggered animation start */
+.prize-card:nth-child(1) { --rot: -4deg;   z-index: 5; animation-delay:  0.0s; }
+.prize-card:nth-child(2) { --rot:  2.5deg; z-index: 4; animation-delay: -0.8s; }
+.prize-card:nth-child(3) { --rot: -1.5deg; z-index: 3; animation-delay: -1.6s; }
+.prize-card:nth-child(4) { --rot:  3.0deg; z-index: 4; animation-delay: -0.4s; }
+.prize-card:nth-child(5) { --rot: -2.0deg; z-index: 5; animation-delay: -1.2s; }
+.prize-card:nth-child(n+6) { --rot: 0deg;  z-index: 2; animation-delay:  0.0s; }
+
+.prize-card:hover {
+  z-index: 10 !important;
+  animation-play-state: paused !important;
+  transform: scale(1.1) translateY(-18px) rotate(0deg) !important;
+  box-shadow: 0 28px 72px rgba(0,0,0,0.55), 0 8px 20px rgba(0,0,0,0.28);
+}
+
+/* Single keyframe — rotation comes from --rot CSS variable */
+@keyframes cardFloat {
+  0%, 100% { transform: rotate(var(--rot)) translateY(0px);    }
+  50%       { transform: rotate(var(--rot)) translateY(-11px);  }
 }
 
 .prize-card img {
@@ -434,45 +455,7 @@ body[data-theme^="ramadan"] .ramadan-header-decor {
   height: 100%;
   object-fit: contain;
   display: block;
-}
-
-/* Per-card rotation + float animations — each card gets its own tilt */
-.prize-card:nth-child(1) { z-index: 5; animation: pf1 3.2s ease-in-out infinite; }
-.prize-card:nth-child(2) { z-index: 4; animation: pf2 2.9s ease-in-out infinite 0.5s; }
-.prize-card:nth-child(3) { z-index: 3; animation: pf3 3.6s ease-in-out infinite 1.0s; }
-.prize-card:nth-child(4) { z-index: 4; animation: pf4 3.0s ease-in-out infinite 0.3s; }
-.prize-card:nth-child(5) { z-index: 5; animation: pf5 3.3s ease-in-out infinite 0.7s; }
-.prize-card:nth-child(n+6) { z-index: 2; animation: pf1 3.2s ease-in-out infinite; }
-
-.prize-card:hover {
-  z-index: 10 !important;
-  animation-play-state: paused !important;
-  transform: scale(1.1) translateY(-20px) !important;
-  box-shadow:
-    0 30px 72px rgba(0, 0, 0, 0.55),
-    0 10px 24px rgba(0, 0, 0, 0.35);
-}
-
-/* Rotation is baked into each keyframe so it persists through the animation */
-@keyframes pf1 {
-  0%, 100% { transform: rotate(-4deg)   translateY(0);     }
-  50%       { transform: rotate(-4deg)   translateY(-13px); }
-}
-@keyframes pf2 {
-  0%, 100% { transform: rotate(2.5deg)  translateY(0);     }
-  50%       { transform: rotate(2.5deg)  translateY(-10px); }
-}
-@keyframes pf3 {
-  0%, 100% { transform: rotate(-1deg)   translateY(0);     }
-  50%       { transform: rotate(-1deg)   translateY(-15px); }
-}
-@keyframes pf4 {
-  0%, 100% { transform: rotate(3.5deg)  translateY(0);     }
-  50%       { transform: rotate(3.5deg)  translateY(-11px); }
-}
-@keyframes pf5 {
-  0%, 100% { transform: rotate(-2.5deg) translateY(0);     }
-  50%       { transform: rotate(-2.5deg) translateY(-12px); }
+  border-radius: 8px;
 }
 
 /* ── Leaderboard ── */
@@ -562,9 +545,9 @@ body[data-theme^="ramadan"] .ramadan-header-decor {
 .time-m,
 .time-s {
   font-family: var(--font-display);
-  font-size: clamp(50px, 7.5vw, 110px);
+  font-size: clamp(36px, 5.5vw, 80px);
   color: var(--th-num-color);
-  letter-spacing: -2px;
+  letter-spacing: -1px;
   text-shadow: 0 0 40px var(--th-glow), 0 0 70px var(--th-glow);
   line-height: 0.88;
 }
@@ -572,7 +555,7 @@ body[data-theme^="ramadan"] .ramadan-header-decor {
 /* Colon separator — dimmed */
 .time-sep {
   font-family: var(--font-display);
-  font-size: clamp(36px, 5.5vw, 82px);
+  font-size: clamp(26px, 4vw, 58px);
   color: var(--th-text);
   opacity: 0.45;
   padding: 0 1px;
@@ -582,9 +565,9 @@ body[data-theme^="ramadan"] .ramadan-header-decor {
 /* Milliseconds (centiseconds) — accent color 2, slightly smaller */
 .time-cs {
   font-family: var(--font-display);
-  font-size: clamp(36px, 5.5vw, 82px);
+  font-size: clamp(26px, 4vw, 58px);
   color: var(--th-dec-color);
-  letter-spacing: -1px;
+  letter-spacing: 0px;
   line-height: 0.88;
   text-shadow: 0 0 30px var(--th-glow);
 }
@@ -1120,9 +1103,9 @@ input[type=number] { -moz-appearance: textfield; }
 
 /* ── Responsive ── */
 @media (max-width: 640px) {
-  .time-m, .time-s { font-size: clamp(32px, 9vw, 60px); letter-spacing: -1px; }
-  .time-sep         { font-size: clamp(24px, 7vw, 48px); }
-  .time-cs          { font-size: clamp(24px, 7vw, 48px); letter-spacing: 0; }
+  .time-m, .time-s { font-size: clamp(24px, 7vw, 44px); letter-spacing: 0; }
+  .time-sep         { font-size: clamp(18px, 5.5vw, 34px); }
+  .time-cs          { font-size: clamp(18px, 5.5vw, 34px); }
   .time-unit        { font-size: 9px; letter-spacing: 2px; }
 }
 
@@ -1135,7 +1118,7 @@ input[type=number] { -moz-appearance: textfield; }
   .card-actions   { width: 100%; justify-content: space-between; }
   .theme-grid     { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
   /* Prize cards: tighter overlap on small screens */
-  .prize-card                  { border-radius: 14px; padding: 10px; }
-  .prize-card + .prize-card   { margin-left: -16px; }
-  .prize-cards    { padding: 10px 16px 24px; }
+  .prize-card                         { border-radius: 14px; padding: 10px; }
+  .prize-card:not(:first-child)       { margin-left: -14px; }
+  .prize-cards                        { padding: 8px 12px 24px; }
 }
