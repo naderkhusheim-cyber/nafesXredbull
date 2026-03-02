@@ -4,8 +4,6 @@
    Applied via data-theme attribute on <body>
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700;900&display=swap');
-
 /* ── Reset & Base ─────────────────────────────────────────── */
 *, *::before, *::after {
   margin: 0;
@@ -15,8 +13,8 @@
 
 /* ── Fixed Variables (fonts + admin palette) ──────────────── */
 :root {
-  --font-display: 'Bebas Neue', 'Impact', Arial Narrow, sans-serif;
-  --font-body:    'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Futura', 'Futura PT', 'Futura Std', 'Century Gothic', 'Trebuchet MS', 'Gill Sans', 'Gill Sans MT', Arial, sans-serif;
+  --font-body:    'Futura', 'Futura PT', 'Futura Std', 'Century Gothic', 'Trebuchet MS', Arial, sans-serif;
 
   /* Admin (always dark) */
   --rb-navy:         #1B1464;
@@ -225,9 +223,9 @@ body[data-theme="redbull-booth-alive"]::after {
     radial-gradient(ellipse 11px 16px at 14px 30px, #ffd200 0%, rgba(255,190,0,0.55) 55%, transparent 100%),
     radial-gradient(ellipse 26px 32px at 14px 40px, rgba(255,200,0,0.22) 0%, transparent 100%),
     radial-gradient(ellipse 1.5px 14px at 14px 13px, rgba(228,170,10,0.75) 0%, transparent 100%),
-    /* Bulb 2 — red-orange, hangs 36px */
-    radial-gradient(ellipse 10px 15px at 46px 36px, #ff5500 0%, rgba(255,70,0,0.55) 55%, transparent 100%),
-    radial-gradient(ellipse 24px 30px at 46px 46px, rgba(255,70,0,0.20) 0%, transparent 100%),
+    /* Bulb 2 — warm white, hangs 36px */
+    radial-gradient(ellipse 10px 15px at 46px 36px, #fff8e1 0%, rgba(255,240,200,0.55) 55%, transparent 100%),
+    radial-gradient(ellipse 24px 30px at 46px 46px, rgba(255,235,190,0.22) 0%, transparent 100%),
     radial-gradient(ellipse 1.5px 20px at 46px 16px, rgba(228,170,10,0.75) 0%, transparent 100%),
     /* Bulb 3 — warm white, hangs 24px */
     radial-gradient(ellipse 10px 14px at 78px 24px, #fff8cc 0%, rgba(255,230,140,0.55) 55%, transparent 100%),
@@ -262,6 +260,11 @@ body[data-theme="ramadan-lantern"] {
   --th-img-border:      rgba(230, 168, 23, 0.55);
   --th-img-shadow:      rgba(255, 107, 53, 0.28);
   --th-sub-text:        rgba(255, 209, 102, 0.88);
+}
+
+/* Push display content below the 88px string-lights strip */
+body[data-theme="redbull-booth-alive"].display-body {
+  padding-top: 104px;
 }
 
 /* ── Body base ────────────────────────────────────────────── */
@@ -398,6 +401,7 @@ body[data-theme^="ramadan"] .ramadan-header-decor {
   justify-content: center;
   align-items: flex-end;
   padding: 16px 48px 36px;
+  overflow: visible;
 }
 
 /* White floating card */

@@ -42,13 +42,14 @@ db.ref('settings/images').on('value', snap => {
   imgs.sort((a, b) => (a.order || 0) - (b.order || 0));
 
   // Show section FIRST so flex container has correct width for card layout
-  prizesSectionEl.style.display = '';
+  prizesSectionEl.style.display = 'block';
 
+  // Use safeHtml on the URL directly — safeUrl's strict http/https check was
+  // silently dropping cards whose URLs use other valid protocols (blob:, etc.)
   prizeCardsEl.innerHTML = imgs
     .map(img => {
-      const src = safeUrl(img.url);
-      if (!src) return '';
-      return `<div class="prize-card"><img src="${src}" alt="${safeHtml(img.label || '')}" onerror="this.style.opacity='0.35'" /></div>`;
+      if (!img.url) return '';
+      return `<div class="prize-card"><img src="${safeHtml(String(img.url))}" alt="${safeHtml(img.label || '')}" onerror="this.style.opacity='0.35'" /></div>`;
     })
     .join('');
 });
