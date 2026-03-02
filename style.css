@@ -417,7 +417,7 @@ body[data-theme^="ramadan"] .ramadan-header-decor {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px;
+  padding: 2px;
   box-shadow:
     0 16px 48px rgba(0, 0, 0, 0.45),
     0  4px 12px rgba(0, 0, 0, 0.22);
@@ -1101,24 +1101,80 @@ input[type=number] { -moz-appearance: textfield; }
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* ── Responsive ── */
-@media (max-width: 640px) {
-  .time-m, .time-s { font-size: clamp(24px, 7vw, 44px); letter-spacing: 0; }
-  .time-sep         { font-size: clamp(18px, 5.5vw, 34px); }
-  .time-cs          { font-size: clamp(18px, 5.5vw, 34px); }
-  .time-unit        { font-size: 9px; letter-spacing: 2px; }
+/* ── Responsive ────────────────────────────────────────────── */
+
+/* ─ Large screens: widen wrapper ─ */
+@media (min-width: 1280px) {
+  .display-wrapper { max-width: 1280px; }
+  .display-body    { padding: 44px 32px 72px; }
 }
 
+/* ─ Tablet landscape (769–1024px) ─ */
+@media (max-width: 1024px) {
+  .display-body    { padding: 28px 20px 52px; }
+  .player-row      { padding: 14px 24px; gap: 14px; }
+}
+
+/* ─ Tablet portrait + large phones (≤ 768px) ─ */
+@media (max-width: 768px) {
+  .display-body    { padding: 22px 16px 44px; }
+  .display-title   { font-size: clamp(46px, 10vw, 90px); letter-spacing: 7px; }
+  .display-header  { margin-bottom: 22px; }
+  .prizes-section  { margin-bottom: 24px; }
+  .prizes-title    { font-size: clamp(16px, 3.5vw, 36px); letter-spacing: 4px; margin-bottom: 16px; }
+  .prize-cards     { padding: 6px 20px 24px; }
+  .prize-card:not(:first-child) { margin-left: -18px; }
+  .player-row      { padding: 12px 18px; gap: 10px; margin-bottom: 10px; }
+  .pos-medal, .pos-number { width: clamp(44px, 7vw, 80px); }
+  .pos-medal       { font-size: clamp(30px, 5.5vw, 60px); }
+  .pos-number      { font-size: clamp(30px, 5.5vw, 60px); }
+  .player-name     { font-size: clamp(22px, 3.5vw, 52px); }
+  .time-m, .time-s { font-size: clamp(28px, 5vw, 64px); letter-spacing: 0; }
+  .time-sep        { font-size: clamp(20px, 3.8vw, 48px); }
+  .time-cs         { font-size: clamp(20px, 3.8vw, 48px); }
+  .time-unit       { font-size: 9px; }
+}
+
+/* ─ Mobile phones (≤ 560px) ─ */
 @media (max-width: 560px) {
-  .display-body   { padding: 20px 12px 48px; }
-  .display-header { margin-bottom: 22px; }
-  .player-row     { padding: 12px 14px; gap: 8px; }
-  .admin-header   { gap: 12px; }
+  .display-body    { padding: 18px 10px 40px; }
+  .display-title   { font-size: clamp(38px, 11vw, 72px); letter-spacing: 5px; }
+  .display-header  { margin-bottom: 18px; }
+  .ramadan-header-decor { font-size: clamp(11px, 3.2vw, 16px); letter-spacing: 3px; }
+  .prizes-section  { margin-bottom: 16px; }
+  .prizes-title    { font-size: clamp(13px, 3.8vw, 22px); letter-spacing: 3px; margin-bottom: 12px; }
+  .prize-cards     { padding: 6px 14px 18px; }
+  .prize-card      { border-radius: 20px; padding: 2px;
+                     width: clamp(70px, 18vw, 110px); height: clamp(70px, 18vw, 110px); }
+  .prize-card:not(:first-child) { margin-left: -12px; }
+  .player-row      { padding: 10px 12px; gap: 8px; margin-bottom: 8px; border-radius: 10px; }
+  .pos-medal, .pos-number { width: 40px; }
+  .pos-medal       { font-size: clamp(24px, 7vw, 40px); }
+  .pos-number      { font-size: clamp(24px, 7vw, 40px); }
+  .player-name     { font-size: clamp(16px, 4.5vw, 28px); letter-spacing: 0; }
+  .time-m, .time-s { font-size: clamp(22px, 6.5vw, 38px); letter-spacing: 0; }
+  .time-sep        { font-size: clamp(16px, 5vw, 28px); }
+  .time-cs         { font-size: clamp(16px, 5vw, 28px); }
+  .time-unit       { font-size: 8px; }
+  /* Admin */
+  .admin-header    { gap: 12px; }
   .players-card-header { flex-direction: column; }
-  .card-actions   { width: 100%; justify-content: space-between; }
-  .theme-grid     { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
-  /* Prize cards: tighter overlap on small screens */
-  .prize-card                         { border-radius: 14px; padding: 10px; }
-  .prize-card:not(:first-child)       { margin-left: -14px; }
-  .prize-cards                        { padding: 8px 12px 24px; }
+  .card-actions    { width: 100%; justify-content: space-between; }
+  .theme-grid      { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+}
+
+/* ─ Very small phones (≤ 380px) ─ */
+@media (max-width: 380px) {
+  .display-body    { padding: 14px 8px 36px; }
+  .display-title   { font-size: clamp(34px, 10vw, 56px); letter-spacing: 4px; }
+  .player-row      { padding: 8px 10px; gap: 6px; margin-bottom: 6px; }
+  .pos-medal, .pos-number { width: 34px; }
+  .pos-medal       { font-size: clamp(20px, 6vw, 34px); }
+  .pos-number      { font-size: clamp(20px, 6vw, 34px); }
+  .player-name     { font-size: clamp(14px, 4vw, 22px); }
+  .time-m, .time-s { font-size: clamp(18px, 5.5vw, 30px); }
+  .time-sep        { font-size: clamp(14px, 4vw, 22px); }
+  .time-cs         { font-size: clamp(14px, 4vw, 22px); }
+  .prize-card      { width: clamp(58px, 16vw, 85px); height: clamp(58px, 16vw, 85px); }
+  .prize-card:not(:first-child) { margin-left: -10px; }
 }
