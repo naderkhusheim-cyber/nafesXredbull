@@ -27,6 +27,14 @@ const THEMES = [
     glow:   'rgba(255,201,6,0.35)',
   },
   {
+    id:     'redbull-booth',
+    name:   'RB\nBooth',
+    emoji:  '🟡',
+    bg:     'linear-gradient(135deg, #2f304c 0%, #3d3e5e 100%)',
+    accent: '#e4aa0a',
+    glow:   'rgba(228,170,10,0.45)',
+  },
+  {
     id:     'ramadan-gold',
     name:   'Ramadan\nGold',
     emoji:  '🌙',
@@ -89,6 +97,13 @@ db.ref('settings/images').on('value', snap => {
     imageMap[child.key] = { id: child.key, ...child.val() };
   });
   renderImages();
+});
+
+db.ref('settings/prizesTitle').on('value', snap => {
+  const input = document.getElementById('prizes-title-input');
+  if (input && !input.matches(':focus')) {
+    input.value = snap.val() || '';
+  }
 });
 
 // ── Add player ────────────────────────────────────────────────
@@ -245,6 +260,15 @@ function removeImage(id) {
     .remove()
     .then(() => showToast('Image removed.', 'success'))
     .catch(() => showToast('Error removing image.', 'error'));
+}
+
+function updatePrizesTitle() {
+  const input = document.getElementById('prizes-title-input');
+  const val   = input.value.trim();
+  db.ref('settings/prizesTitle')
+    .set(val || null)
+    .then(() => showToast('Title updated!', 'success'))
+    .catch(() => showToast('Error updating title.', 'error'));
 }
 
 function renderImages() {

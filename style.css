@@ -113,6 +113,26 @@ body[data-theme="ramadan-purple"] {
   --th-sub-text:        rgba(224, 200, 122, 0.85);
 }
 
+/* ── THEME: Red Bull Booth ────────────────────────────────── */
+body[data-theme="redbull-booth"] {
+  --th-bg:              #2f304c;
+  --th-text:            #ffffff;
+  --th-text-dim:        rgba(255, 255, 255, 0.45);
+  --th-glass:           rgba(255, 255, 255, 0.06);
+  --th-glass-border:    rgba(228, 170, 10, 0.25);
+  --th-accent1:         #e4aa0a;
+  --th-accent2:         #ffffff;
+  --th-title-grad:      linear-gradient(135deg, #e4aa0a 0%, #ffd740 100%);
+  --th-divider-grad:    linear-gradient(90deg, transparent, #e4aa0a, #ffffff, #e4aa0a, transparent);
+  --th-row-border-left: #e4aa0a;
+  --th-num-color:       #e4aa0a;
+  --th-dec-color:       #ffffff;
+  --th-glow:            rgba(228, 170, 10, 0.55);
+  --th-img-border:      rgba(228, 170, 10, 0.5);
+  --th-img-shadow:      rgba(228, 170, 10, 0.25);
+  --th-sub-text:        rgba(228, 170, 10, 0.9);
+}
+
 /* ── THEME: Ramadan Lantern ───────────────────────────────── */
 body[data-theme="ramadan-lantern"] {
   --th-bg:              linear-gradient(160deg, #120600 0%, #2E1204 50%, #4A1E08 100%);
@@ -245,40 +265,94 @@ body[data-theme^="ramadan"] .ramadan-header-decor {
   margin-top: 6px;
 }
 
-/* ── Image Gallery Strip ──────────────────────────────────── */
-.gallery-strip {
+/* ── Prizes Section ───────────────────────────────────────── */
+.prizes-section {
   width: 100%;
+  margin-bottom: 36px;
+  text-align: center;
+}
+
+.prizes-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3.2vw, 44px);
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--th-text);
+  margin-bottom: 24px;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
+}
+
+.prize-cards {
   display: flex;
-  gap: 14px;
-  padding-bottom: 12px;
-  margin-bottom: 28px;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--th-accent1) transparent;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 16px 48px 36px;
 }
 
-.gallery-strip:empty {
-  display: none;
-}
-
-.gallery-strip::-webkit-scrollbar        { height: 4px; }
-.gallery-strip::-webkit-scrollbar-track  { background: transparent; }
-.gallery-strip::-webkit-scrollbar-thumb  { background: var(--th-accent1); border-radius: 2px; }
-
-.gallery-img {
+/* White floating card */
+.prize-card {
+  background: #ffffff;
+  border-radius: 22px;
+  width: clamp(110px, 14.5vw, 188px);
+  height: clamp(110px, 14.5vw, 188px);
   flex-shrink: 0;
-  width: clamp(130px, 20vw, 230px);
-  height: clamp(88px, 14vw, 165px);
-  object-fit: cover;
-  border-radius: 14px;
-  border: 2px solid var(--th-img-border);
-  box-shadow: 0 6px 28px var(--th-img-shadow), 0 0 0 1px rgba(255,255,255,0.04);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  box-shadow:
+    0 14px 44px rgba(0, 0, 0, 0.42),
+    0 4px 14px rgba(0, 0, 0, 0.25),
+    0 1px 3px rgba(0, 0, 0, 0.15);
+  position: relative;
+  margin: 0 -13px;        /* overlap */
+  transition: box-shadow 0.3s;
 }
 
-.gallery-img:hover {
-  transform: scale(1.04) translateY(-4px);
-  box-shadow: 0 16px 50px var(--th-img-shadow), 0 0 0 2px var(--th-img-border);
+.prize-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Per-card rotation + float animations — each card gets its own tilt */
+.prize-card:nth-child(1) { z-index: 5; animation: pf1 3.2s ease-in-out infinite; }
+.prize-card:nth-child(2) { z-index: 4; animation: pf2 2.9s ease-in-out infinite 0.5s; }
+.prize-card:nth-child(3) { z-index: 3; animation: pf3 3.6s ease-in-out infinite 1.0s; }
+.prize-card:nth-child(4) { z-index: 4; animation: pf4 3.0s ease-in-out infinite 0.3s; }
+.prize-card:nth-child(5) { z-index: 5; animation: pf5 3.3s ease-in-out infinite 0.7s; }
+.prize-card:nth-child(n+6) { z-index: 2; animation: pf1 3.2s ease-in-out infinite; }
+
+.prize-card:hover {
+  z-index: 10 !important;
+  animation-play-state: paused !important;
+  transform: scale(1.1) translateY(-20px) !important;
+  box-shadow:
+    0 30px 72px rgba(0, 0, 0, 0.55),
+    0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* Rotation is baked into each keyframe so it persists through the animation */
+@keyframes pf1 {
+  0%, 100% { transform: rotate(-4deg)   translateY(0);     }
+  50%       { transform: rotate(-4deg)   translateY(-13px); }
+}
+@keyframes pf2 {
+  0%, 100% { transform: rotate(2.5deg)  translateY(0);     }
+  50%       { transform: rotate(2.5deg)  translateY(-10px); }
+}
+@keyframes pf3 {
+  0%, 100% { transform: rotate(-1deg)   translateY(0);     }
+  50%       { transform: rotate(-1deg)   translateY(-15px); }
+}
+@keyframes pf4 {
+  0%, 100% { transform: rotate(3.5deg)  translateY(0);     }
+  50%       { transform: rotate(3.5deg)  translateY(-11px); }
+}
+@keyframes pf5 {
+  0%, 100% { transform: rotate(-2.5deg) translateY(0);     }
+  50%       { transform: rotate(-2.5deg) translateY(-12px); }
 }
 
 /* ── Leaderboard ── */
@@ -771,6 +845,52 @@ input[type=number] { -moz-appearance: textfield; }
 .theme-active-label span {
   color: var(--rb-yellow);
   font-weight: 700;
+}
+
+/* ── Prizes Title Control (admin) ───────────────────────── */
+.prizes-title-control {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.prizes-title-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 8px;
+}
+
+.prizes-title-row {
+  display: flex;
+  gap: 10px;
+}
+
+.prizes-title-row input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.09);
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  border-radius: 9px;
+  padding: 10px 14px;
+  color: var(--rb-white);
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.prizes-title-row input:focus {
+  border-color: var(--rb-yellow);
+  background: rgba(255, 201, 6, 0.07);
+}
+
+.prizes-title-row input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 400;
 }
 
 /* ── Admin Image Management ─────────────────────────────── */

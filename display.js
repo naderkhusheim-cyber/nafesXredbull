@@ -1,11 +1,12 @@
 // ================================================================
 //  display.js — Live leaderboard logic for index.html
-//  Theme is fully admin-controlled via Firebase settings/theme
-//  Images are admin-controlled via Firebase settings/images
+//  Theme + prizes title + images are admin-controlled via Firebase
 // ================================================================
 
-const leaderboardEl = document.getElementById('leaderboard');
-const galleryEl     = document.getElementById('gallery-strip');
+const leaderboardEl   = document.getElementById('leaderboard');
+const prizeCardsEl    = document.getElementById('prize-cards');
+const prizesTitleEl   = document.getElementById('prizes-title');
+const prizesSectionEl = document.getElementById('prizes-section');
 
 let currentPlayers = [];
 let currentSort    = 'time-asc';
@@ -21,27 +22,34 @@ db.ref('settings/theme').on('value', snap => {
   localStorage.setItem('theme', theme);
 });
 
-// ── Firebase: Listen for images ───────────────────────────────
+// ── Firebase: Listen for prizes section title ─────────────────
+db.ref('settings/prizesTitle').on('value', snap => {
+  const title = snap.val() || 'PLAY AND WIN MANY PRIZES';
+  prizesTitleEl.textContent = title;
+});
+
+// ── Firebase: Listen for images → floating prize cards ────────
 db.ref('settings/images').on('value', snap => {
   const imgs = [];
-  snap.forEach(child => {
-    imgs.push({ id: child.key, ...child.val() });
-  });
+  snap.forEach(child => imgs.push({ id: child.key, ...child.val() }));
 
   if (imgs.length === 0) {
-    galleryEl.innerHTML = '';
+    prizesSectionEl.style.display = 'none';
+    prizeCardsEl.innerHTML = '';
     return;
   }
 
   imgs.sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  galleryEl.innerHTML = imgs
+  prizeCardsEl.innerHTML = imgs
     .map(img => {
       const src = safeUrl(img.url);
       if (!src) return '';
-      return `<img class="gallery-img" src="${src}" alt="${safeHtml(img.label || '')}" loading="lazy" onerror="this.remove()" />`;
+      return `<div class="prize-card"><img src="${src}" alt="${safeHtml(img.label || '')}" loading="lazy" onerror="this.closest('.prize-card').remove()" /></div>`;
     })
     .join('');
+
+  prizesSectionEl.style.display = '';
 });
 
 // ── Firebase: Listen for players ─────────────────────────────
@@ -91,15 +99,12 @@ function buildRow(player, index) {
     ? `<span class="time-m">${parts[0]}</span><span class="time-sep">:</span><span class="time-s">${parts[1]}</span><span class="time-sep">:</span><span class="time-cs">${parts[2]}</span>`
     : `<span class="time-s">${parts[0]}</span><span class="time-sep">:</span><span class="time-cs">${parts[1]}</span>`;
 
-  const unitLabel = parts.length === 3 ? 'MIN : SEC : MS' : 'SEC : MS';
-
   return `
     <div class="player-row ${rankClass}">
       ${position}
       <span class="player-name">${safeHtml(player.name)}</span>
       <div class="player-time">
         <div class="time-display">${timeHTML}</div>
-        <div class="time-unit">${unitLabel}</div>
       </div>
     </div>`;
 }

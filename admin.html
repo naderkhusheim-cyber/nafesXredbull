@@ -103,6 +103,21 @@
     <!-- ── Display Images ── -->
     <section class="card images-card">
       <h2 class="card-heading">DISPLAY IMAGES</h2>
+
+      <!-- Section title (shown above prize cards on display) -->
+      <div class="prizes-title-control">
+        <label class="prizes-title-label">Section Title (shown above cards)</label>
+        <div class="prizes-title-row">
+          <input
+            type="text"
+            id="prizes-title-input"
+            placeholder="PLAY AND WIN MANY PRIZES"
+            maxlength="60"
+          />
+          <button class="btn btn-export" onclick="updatePrizesTitle()">Save</button>
+        </div>
+      </div>
+
       <div class="image-form-row">
         <input
           type="url"
