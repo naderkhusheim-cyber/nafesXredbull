@@ -8,6 +8,55 @@
 </head>
 <body class="admin-body">
 
+  <!-- ── Passcode Gate ─────────────────────────────────────── -->
+  <div id="passcode-overlay" class="passcode-overlay">
+    <div class="passcode-box">
+      <div class="passcode-icon">🔒</div>
+      <h2 class="passcode-title">ADMIN ACCESS</h2>
+      <p class="passcode-sub">Enter passcode to continue</p>
+      <input
+        type="password"
+        id="passcode-input"
+        class="passcode-input"
+        placeholder="••••"
+        maxlength="10"
+        autocomplete="off"
+        autofocus
+      />
+      <p class="passcode-error" id="passcode-error">&nbsp;</p>
+      <button class="btn btn-primary passcode-btn" onclick="checkPasscode()">ENTER</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var CODE = '2026';
+
+      window.checkPasscode = function () {
+        var input = document.getElementById('passcode-input');
+        var error = document.getElementById('passcode-error');
+        if (input.value === CODE) {
+          document.getElementById('passcode-overlay').style.display = 'none';
+        } else {
+          error.textContent = 'Wrong passcode — try again.';
+          input.value = '';
+          input.focus();
+          input.classList.remove('passcode-shake');
+          void input.offsetWidth; // restart animation
+          input.classList.add('passcode-shake');
+        }
+      };
+
+      document.addEventListener('DOMContentLoaded', function () {
+        var input = document.getElementById('passcode-input');
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') window.checkPasscode();
+        });
+        input.focus();
+      });
+    })();
+  </script>
+
   <div class="admin-container">
 
     <!-- ── Header ── -->
