@@ -126,7 +126,7 @@ form.addEventListener('submit', e => {
   if (isNaN(timeVal)) return showToast('Invalid time — use M:SS:MS (e.g. 1:45:29 or 45:29).', 'error');
 
   db.ref('players')
-    .push({ name, time: timeVal })
+    .push({ name, time: timeVal, timestamp: Date.now() })
     .then(() => {
       nameInput.value = '';
       timeInput.value = '';
@@ -195,17 +195,23 @@ function renderList() {
 }
 
 function buildAdminRow(player, rank) {
+  const ts = formatTimestamp(player.timestamp);
   return `
     <div class="admin-player-item">
-      <span class="admin-rank">${rank}</span>
-      <span class="admin-name">${safeHtml(player.name)}</span>
-      <span class="admin-time">${formatTime(parseFloat(player.time))}</span>
-      <button
-        class="btn btn-icon-delete"
-        data-action="delete"
-        data-id="${player.id}"
-        title="Remove player"
-      >Remove</button>
+      <div class="admin-row-top">
+        <span class="admin-rank">${rank}</span>
+        <span class="admin-time">${formatTime(parseFloat(player.time))}</span>
+        <button
+          class="btn btn-icon-delete"
+          data-action="delete"
+          data-id="${player.id}"
+          title="Remove player"
+        >✕</button>
+      </div>
+      <div class="admin-row-bottom">
+        <span class="admin-name">${safeHtml(player.name)}</span>
+        <span class="admin-timestamp">${ts}</span>
+      </div>
     </div>`;
 }
 
@@ -374,19 +380,36 @@ function exportToExcel() {
 
   const sorted = getSorted(players, sortOrder);
 
-  const rows = [['Rank', 'Player Name', 'Time (M:SS:MS)']];
+  const rows = [['Rank', 'Player Name', 'Time (M:SS:MS)', 'Added At']];
   sorted.forEach((p, i) => {
-    rows.push([i + 1, p.name, formatTime(parseFloat(p.time))]);
+    rows.push([i + 1, p.name, formatTime(parseFloat(p.time)), formatTimestampFull(p.timestamp)]);
   });
 
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.aoa_to_sheet(rows);
 
-  ws['!cols'] = [{ wch: 6 }, { wch: 28 }, { wch: 18 }];
+  ws['!cols'] = [{ wch: 6 }, { wch: 28 }, { wch: 18 }, { wch: 22 }];
 
   XLSX.utils.book_append_sheet(wb, ws, 'Leaderboard');
   XLSX.writeFile(wb, 'redbull-competition-results.xlsx');
   showToast('Exported to Excel!', 'success');
+}
+
+/** Short timestamp for admin display: "DD/MM HH:MM" */
+function formatTimestamp(ts) {
+  if (!ts) return '—';
+  const d     = new Date(ts);
+  const day   = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const hour  = String(d.getHours()).padStart(2, '0');
+  const min   = String(d.getMinutes()).padStart(2, '0');
+  return `${day}/${month} ${hour}:${min}`;
+}
+
+/** Full timestamp for Excel export */
+function formatTimestampFull(ts) {
+  if (!ts) return '—';
+  return new Date(ts).toLocaleString('en-GB');
 }
 
 function showToast(message, type = 'success') {

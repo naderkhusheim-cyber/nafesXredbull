@@ -844,9 +844,9 @@ input[type=number] { -moz-appearance: textfield; }
 /* ── Admin Player Item ── */
 .admin-player-item {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 13px 16px;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
@@ -855,22 +855,28 @@ input[type=number] { -moz-appearance: textfield; }
 }
 .admin-player-item:hover { background: rgba(255, 255, 255, 0.07); }
 
+/* Top row: rank · time · remove button */
+.admin-row-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Bottom row: name · timestamp — indented to align under time */
+.admin-row-bottom {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-left: 46px;
+}
+
 .admin-rank {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 20px;
   color: var(--rb-yellow);
   width: 36px;
   text-align: center;
   flex-shrink: 0;
-}
-
-.admin-name {
-  font-size: 17px;
-  font-weight: 700;
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .admin-time {
@@ -878,9 +884,23 @@ input[type=number] { -moz-appearance: textfield; }
   font-size: 20px;
   color: var(--rb-yellow);
   letter-spacing: 1px;
+  flex: 1;
+}
+
+.admin-name {
+  font-size: 16px;
+  font-weight: 700;
+  flex: 1;
+  word-break: break-word;
+  color: var(--rb-white);
+}
+
+.admin-timestamp {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.40);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
   flex-shrink: 0;
-  min-width: 90px;
-  text-align: right;
 }
 
 .admin-empty {
@@ -1137,8 +1157,8 @@ input[type=number] { -moz-appearance: textfield; }
 
 /* ─ Mobile phones (≤ 560px) ─ */
 @media (max-width: 560px) {
-  .display-body    { padding: 18px 10px 40px; }
-  .display-title   { font-size: clamp(38px, 11vw, 72px); letter-spacing: 5px; }
+  .display-body    { padding: 18px 16px 40px; }
+  .display-title   { font-size: clamp(34px, 9.5vw, 72px); letter-spacing: 3px; }
   .display-header  { margin-bottom: 18px; }
   .ramadan-header-decor { font-size: clamp(11px, 3.2vw, 16px); letter-spacing: 3px; }
   .prizes-section  { margin-bottom: 16px; }
@@ -1165,8 +1185,8 @@ input[type=number] { -moz-appearance: textfield; }
 
 /* ─ Very small phones (≤ 380px) ─ */
 @media (max-width: 380px) {
-  .display-body    { padding: 14px 8px 36px; }
-  .display-title   { font-size: clamp(34px, 10vw, 56px); letter-spacing: 4px; }
+  .display-body    { padding: 14px 12px 36px; }
+  .display-title   { font-size: clamp(28px, 9vw, 50px); letter-spacing: 2px; }
   .player-row      { padding: 8px 10px; gap: 6px; margin-bottom: 6px; }
   .pos-medal, .pos-number { width: 34px; }
   .pos-medal       { font-size: clamp(20px, 6vw, 34px); }
