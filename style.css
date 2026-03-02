@@ -172,12 +172,18 @@ body[data-theme="redbull-booth-alive"] {
   100% { background-position: 0%   50%; }
 }
 
-/* ✦ Golden star field */
+/* ✦ Golden star field + ambient halos */
 body[data-theme="redbull-booth-alive"]::before {
   content: '';
   position: fixed;
   inset: 0;
   background-image:
+    /* Warm ambient halos at screen edges */
+    radial-gradient(ellipse 55% 35% at  10%  0%,  rgba(228,170,10,0.22) 0%, transparent 100%),
+    radial-gradient(ellipse 45% 28% at  50%  0%,  rgba(228,170,10,0.16) 0%, transparent 100%),
+    radial-gradient(ellipse 50% 32% at  90%  0%,  rgba(228,170,10,0.20) 0%, transparent 100%),
+    radial-gradient(ellipse 80% 20% at  50% 100%, rgba(228,170,10,0.10) 0%, transparent 100%),
+    /* Stars */
     radial-gradient(ellipse 2px   2px   at  8%  10%, rgba(255,220,80,1.0)  0%, transparent 0%),
     radial-gradient(ellipse 1px   1px   at 18%  55%, rgba(255,220,80,0.70) 0%, transparent 0%),
     radial-gradient(ellipse 1.5px 1.5px at 28%  22%, rgba(255,220,80,0.90) 0%, transparent 0%),
@@ -201,28 +207,41 @@ body[data-theme="redbull-booth-alive"]::before {
   animation: starTwinkle 4.5s ease-in-out infinite alternate;
 }
 
-/* ✦ Warm golden Ramadan light-halo glow — top corners + bottom glow */
+/* ✦ Hanging Ramadan string lights at top */
 body[data-theme="redbull-booth-alive"]::after {
   content: '';
   position: fixed;
-  inset: 0;
-  background:
-    /* top-left lantern */
-    radial-gradient(ellipse 55% 35% at  10%  0%, rgba(228,170,10,0.22) 0%, transparent 100%),
-    /* top-center lantern */
-    radial-gradient(ellipse 45% 28% at  50%  0%, rgba(228,170,10,0.16) 0%, transparent 100%),
-    /* top-right lantern */
-    radial-gradient(ellipse 50% 32% at  90%  0%, rgba(228,170,10,0.20) 0%, transparent 100%),
-    /* floor glow */
-    radial-gradient(ellipse 80% 20% at  50% 100%, rgba(228,170,10,0.10) 0%, transparent 100%);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 88px;
   pointer-events: none;
-  z-index: 0;
-  animation: lightPulse 3.8s ease-in-out infinite alternate;
+  z-index: 1;
+  /* Gold wire string across top */
+  border-top: 2px solid rgba(228, 170, 10, 0.80);
+  /* Three hanging bulbs tiling every 96px */
+  background-image:
+    /* Bulb 1 — gold/warm yellow, hangs 30px */
+    radial-gradient(ellipse 11px 16px at 14px 30px, #ffd200 0%, rgba(255,190,0,0.55) 55%, transparent 100%),
+    radial-gradient(ellipse 26px 32px at 14px 40px, rgba(255,200,0,0.22) 0%, transparent 100%),
+    radial-gradient(ellipse 1.5px 14px at 14px 13px, rgba(228,170,10,0.75) 0%, transparent 100%),
+    /* Bulb 2 — red-orange, hangs 36px */
+    radial-gradient(ellipse 10px 15px at 46px 36px, #ff5500 0%, rgba(255,70,0,0.55) 55%, transparent 100%),
+    radial-gradient(ellipse 24px 30px at 46px 46px, rgba(255,70,0,0.20) 0%, transparent 100%),
+    radial-gradient(ellipse 1.5px 20px at 46px 16px, rgba(228,170,10,0.75) 0%, transparent 100%),
+    /* Bulb 3 — warm white, hangs 24px */
+    radial-gradient(ellipse 10px 14px at 78px 24px, #fff8cc 0%, rgba(255,230,140,0.55) 55%, transparent 100%),
+    radial-gradient(ellipse 22px 28px at 78px 32px, rgba(255,220,110,0.20) 0%, transparent 100%),
+    radial-gradient(ellipse 1.5px 10px at 78px 10px, rgba(228,170,10,0.75) 0%, transparent 100%);
+  background-size: 96px 88px;
+  background-repeat: repeat-x;
+  background-position: 0 0;
+  animation: lightsGlow 2.8s ease-in-out infinite alternate;
 }
 
-@keyframes lightPulse {
-  from { opacity: 0.6; }
-  to   { opacity: 1;   }
+@keyframes lightsGlow {
+  from { opacity: 0.72; filter: brightness(0.88); }
+  to   { opacity: 1;    filter: brightness(1.20); }
 }
 
 /* ── THEME: Ramadan Lantern ───────────────────────────────── */
@@ -398,8 +417,12 @@ body[data-theme^="ramadan"] .ramadan-header-decor {
     0 4px 14px rgba(0, 0, 0, 0.25),
     0 1px 3px rgba(0, 0, 0, 0.15);
   position: relative;
-  margin: 0 -13px;        /* overlap */
   transition: box-shadow 0.3s;
+}
+
+/* Overlap cards — only from 2nd card onward to avoid centering issues */
+.prize-card + .prize-card {
+  margin-left: -24px;
 }
 
 .prize-card img {
@@ -1108,6 +1131,7 @@ input[type=number] { -moz-appearance: textfield; }
   .card-actions   { width: 100%; justify-content: space-between; }
   .theme-grid     { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
   /* Prize cards: tighter overlap on small screens */
-  .prize-card     { margin: 0 -8px; border-radius: 14px; padding: 10px; }
+  .prize-card                  { border-radius: 14px; padding: 10px; }
+  .prize-card + .prize-card   { margin-left: -16px; }
   .prize-cards    { padding: 10px 16px 24px; }
 }

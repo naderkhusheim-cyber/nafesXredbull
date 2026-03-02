@@ -41,16 +41,16 @@ db.ref('settings/images').on('value', snap => {
 
   imgs.sort((a, b) => (a.order || 0) - (b.order || 0));
 
+  // Show section FIRST so flex container has correct width for card layout
+  prizesSectionEl.style.display = '';
+
   prizeCardsEl.innerHTML = imgs
     .map(img => {
       const src = safeUrl(img.url);
       if (!src) return '';
-      // onerror: dim image but KEEP the white card visible
-      return `<div class="prize-card"><img src="${src}" alt="${safeHtml(img.label || '')}" loading="lazy" onerror="this.style.opacity='0.35'" /></div>`;
+      return `<div class="prize-card"><img src="${src}" alt="${safeHtml(img.label || '')}" onerror="this.style.opacity='0.35'" /></div>`;
     })
     .join('');
-
-  prizesSectionEl.style.display = '';
 });
 
 // ── Firebase: Listen for players ─────────────────────────────
