@@ -7,6 +7,7 @@ const leaderboardEl   = document.getElementById('leaderboard');
 const prizeCardsEl    = document.getElementById('prize-cards');
 const prizesTitleEl   = document.getElementById('prizes-title');
 const prizesSectionEl = document.getElementById('prizes-section');
+const qrSectionEl     = document.getElementById('qr-section');
 
 let currentPlayers = [];
 let currentSort    = 'time-asc';
@@ -20,6 +21,11 @@ db.ref('settings/theme').on('value', snap => {
   const theme = snap.val() || 'dark';
   document.body.setAttribute('data-theme', theme);
   localStorage.setItem('theme', theme);
+});
+
+// ── Firebase: Listen for QR code visibility ───────────────────
+db.ref('settings/showQR').on('value', snap => {
+  qrSectionEl.style.display = snap.val() === true ? 'flex' : 'none';
 });
 
 // ── Firebase: Listen for prizes section title ─────────────────

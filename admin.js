@@ -11,10 +11,11 @@ const playersList = document.getElementById('players-list');
 const playerCount = document.getElementById('player-count');
 
 // Local state
-let playerMap   = {};   // { id: { id, name, time } }
+let playerMap   = {};   // { id: { id, name, time, timestamp } }
 let sortOrder   = 'time-asc';
 let imageMap    = {};   // { id: { id, url, label, order } }
 let currentTheme = 'dark';
+let showQR       = false;
 
 // ── Theme definitions ─────────────────────────────────────────
 const THEMES = [
@@ -114,6 +115,11 @@ db.ref('settings/prizesTitle').on('value', snap => {
   }
 });
 
+db.ref('settings/showQR').on('value', snap => {
+  showQR = snap.val() === true;
+  renderQRToggle();
+});
+
 // ── Add player ────────────────────────────────────────────────
 
 form.addEventListener('submit', e => {
@@ -169,6 +175,21 @@ function clearAll() {
     .remove()
     .then(() => showToast('Leaderboard cleared.', 'success'))
     .catch(() => showToast('Error clearing leaderboard.', 'error'));
+}
+
+// ── QR code visibility ────────────────────────────────────────
+
+function toggleQR() {
+  db.ref('settings/showQR')
+    .set(!showQR)
+    .catch(() => showToast('Error updating QR setting.', 'error'));
+}
+
+function renderQRToggle() {
+  const btn = document.getElementById('qr-toggle-btn');
+  if (!btn) return;
+  btn.textContent = showQR ? 'ON' : 'OFF';
+  btn.className   = `btn ${showQR ? 'btn-toggle-on' : 'btn-toggle-off'}`;
 }
 
 // ── Render admin list ─────────────────────────────────────────
